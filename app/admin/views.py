@@ -2,9 +2,9 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import admin
-from .forms import DepartmentForm, EmployeeAssignForm, RoleForm, BreedForm
+from .forms import DepartmentForm, UserAssignForm, RoleForm, BreedForm
 from .. import db
-from ..models import Department, Employee, Role, Breed
+from ..models import Department, User, Role, Breed
 
 
 def check_admin():
@@ -301,44 +301,44 @@ def delete_role(id):
 
 # Employee Views
 
-@admin.route('/employees')
+@admin.route('/users')
 @login_required
-def list_employees():
+def list_users():
     """
-    List all employees
+    List all users
     """
     check_admin()
 
-    employees = Employee.query.all()
-    return render_template('admin/employees/employees.html',
-                           employees=employees, title='Employees')
+    users = User.query.all()
+    return render_template('admin/users/users.html',
+                           users=users, title='Employees')
 
 
-@admin.route('/employees/assign/<int:id>', methods=['GET', 'POST'])
+@admin.route('/users/assign/<int:id>', methods=['GET', 'POST'])
 @login_required
-def assign_employee(id):
+def assign_user(id):
     """
-    Assign a department and a role to an employee
+    Assign a department and a role to a user
     """
     check_admin()
 
-    employee = Employee.query.get_or_404(id)
+    user = User.query.get_or_404(id)
 
     # prevent admin from being assigned a department or role
-    if employee.is_admin:
+    if user.is_admin:
         abort(403)
 
-    form = EmployeeAssignForm(obj=employee)
+    form = UserAssignForm(obj=user)
     if form.validate_on_submit():
-        employee.department = form.department.data
-        employee.role = form.role.data
-        db.session.add(employee)
+        user.department = form.department.data
+        user.role = form.role.data
+        db.session.add(user)
         db.session.commit()
         flash('You have successfully assigned a department and role.')
 
         # redirect to the roles page
         return redirect(url_for('admin.list_employees'))
 
-    return render_template('admin/employees/employee.html',
-                           employee=employee, form=form,
+    return render_template('admin/users/user.html',
+                           user=user, form=form,
                            title='Assign Employee')

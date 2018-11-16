@@ -29,8 +29,8 @@
                   <td> {{ role.name }} </td>
                   <td> {{ role.description }} </td>
                   <td>
-                    {% if role.employees %}
-                      {{ role.employees.count() }}
+                    {% if role.users %}
+                      {{ role.users.count() }}
                     {% else %}
                       0
                     {% endif %}

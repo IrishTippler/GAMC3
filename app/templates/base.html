@@ -26,7 +26,7 @@
                       <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
                       <li><a href="{{ url_for('admin.list_departments') }}">Departments</a></li>
                       <li><a href="{{ url_for('admin.list_roles') }}">Roles</a></li>
-                      <li><a href="{{ url_for('admin.list_employees') }}">Employees</a></li>
+                      <li><a href="{{ url_for('admin.list_users') }}">Users</a></li>
                       <li><a href="{{ url_for('admin.list_breeds') }}">Breeds</a></li>
                     {% else %}
                       <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
@@ -62,7 +62,7 @@
                         <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                       {% endif %}
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy; 2016. All Rights Reserved</p>
+                    <p class="copyright text-muted small">I wish you'll never find an author :)</p>
                 </div>
             </div>
         </div>

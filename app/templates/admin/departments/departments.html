@@ -29,8 +29,8 @@
                   <td> {{ department.name }} </td>
                   <td> {{ department.description }} </td>
                   <td>
-                    {% if department.employees %}
-                      {{ department.employees.count() }}
+                    {% if department.users %}
+                      {{ department.users.count() }}
                     {% else %}
                       0
                     {% endif %}

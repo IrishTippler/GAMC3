@@ -1,24 +1,24 @@
-from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user
+from flask import flash, redirect, render_template, abort, url_for
+from flask_login import login_required, login_user, logout_user, current_user
 
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from .. import db
-from ..models import Employee
+from ..models import User
 
 
 @auth.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
+    if not current_user.is_admin:
+        abort(403)
     form = RegistrationForm()
     if form.validate_on_submit():
-        employee = Employee(email=form.email.data,
-                            username=form.username.data,
-                            first_name=form.first_name.data,
-                            last_name=form.last_name.data,
+        user = User(username=form.username.data,
                             password=form.password.data)
 
-        # add employee to the database
-        db.session.add(employee)
+        # add user to the database
+        db.session.add(user)
         db.session.commit()
         flash('You have successfully registered! You may now login.')
 
@@ -36,21 +36,21 @@ def login():
 
         # check whether employee exists in the database and whether
         # the password entered matches the password in the database
-        employee = Employee.query.filter_by(email=form.email.data).first()
-        if employee is not None and employee.verify_password(
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is not None and user.verify_password(
                 form.password.data):
-            # log employee in
-            login_user(employee)
+            # log user in
+            login_user(user)
 
             # redirect to the appropriate dashboard page
-            if employee.is_admin:
+            if user.is_admin:
                 return redirect(url_for('home.admin_dashboard'))
             else:
                 return redirect(url_for('home.dashboard'))
 
         # when login details are incorrect
         else:
-            flash('Invalid email or password.')
+            flash('Invalid username or password.')
 
     # load login template
     return render_template('auth/login.html', form=form, title='Login')
